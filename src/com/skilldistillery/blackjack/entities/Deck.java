@@ -24,10 +24,36 @@ public class Deck {
 		}
 		return deck;
 	}
+
+	public int checkDeckSize() {
+		return cardDeck.size();
+	}
+
+	public void shuffle() {
+		Collections.shuffle(cardDeck);
+	}
+
+	public Card dealCard() {		
+		Card dealtCard = cardDeck.remove(0);
+		return dealtCard;
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Deck [");
+		if (cardDeck != null) {
+			builder.append("cardDeck=");
+			builder.append(cardDeck);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+}
 //public List<Card> getCardDeck() {
 //		return cardDeck;
 //	}
-	//	private List<Card> buildDeck() {
+//	private List<Card> buildDeck() {
 //		List<Card> deck = new ArrayList<>(52);
 //		Rank[] ranks = Rank.values();
 //		Suit[] suits = Suit.values();
@@ -52,17 +78,3 @@ public class Deck {
 //		}
 //		return deck;
 //	}
-	public int checkDeckSize() {
-		return cardDeck.size();
-	}
-
-	public void shuffle() {
-		Collections.shuffle(cardDeck);
-	}
-
-	public Card dealCard() {		
-		Card dealtCard = cardDeck.remove(0);
-		return dealtCard;
-	}
-
-}

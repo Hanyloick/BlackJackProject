@@ -5,19 +5,16 @@ import java.util.Objects;
 public class Card {
 	private Suit suit;
 	private Rank rank;
-	
-	
+
 	public Card(Suit suit, Rank rank) {
 		this.rank = rank;
 		this.suit = suit;
 	}
 
-
 	public int getValue() {
 		return rank.getValue();
 	}
-	
-	
+
 	@Override
 	public String toString() {
 		return rank + " of " + suit;

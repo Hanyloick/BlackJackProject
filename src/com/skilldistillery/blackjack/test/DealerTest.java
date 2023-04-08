@@ -6,33 +6,38 @@ import com.skilldistillery.blackjack.entities.Card;
 import com.skilldistillery.blackjack.entities.Deck;
 
 public class DealerTest {
-	public static void main(String[] args) {
-		DealerTest dealerTest = new DealerTest();
-		dealerTest.run();
 
+	public static void main(String[] args) {
+		DealerTest dealer = new DealerTest();
+		dealer.run();
 	}
 
 	public void run() {
 		Deck deck = new Deck();
-		System.out.println("There are " + deck.checkDeckSize() + " in this deck");
-		System.out.println("how many cards do you want? ");
-		Scanner scanner = new Scanner(System.in);
 		deck.shuffle();
-		int numOfCardsRequested = scanner.nextInt();
+		int numCardsInDeck = deck.checkDeckSize();
+		System.out.println("Current num cards in deck " + numCardsInDeck);
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("How many cards ");
+		int numCardsIWant = scanner.nextInt();
 		scanner.nextLine();
-		if (numOfCardsRequested < deck.checkDeckSize()) {
-			int sumOfRank = 0;
-			for (int i = 0; i < numOfCardsRequested; i++) {
+		if (numCardsIWant <= numCardsInDeck) {
+
+			int sumOfCards = 0;
+			for (int cardNumDealt = 0; cardNumDealt < numCardsIWant; cardNumDealt++) {
 				Card dealtCard = deck.dealCard();
-				sumOfRank += dealtCard.getValue();
-				System.out.println(
-						"you now have " + dealtCard + " " + " rank value " + sumOfRank + " " + deck.checkDeckSize());
+
+				sumOfCards += dealtCard.getValue();
+				System.out.println("you now have: " + dealtCard + " sum of cards " + sumOfCards + " "
+						+ deck.checkDeckSize() + " cards left");
 			}
+
 		} else {
-			System.out.println("not enough cards my guy");
+			System.out.println("Go play somewhere else!");
 		}
 
-//		deck.getCardDeck();
 		scanner.close();
 	}
+
 }

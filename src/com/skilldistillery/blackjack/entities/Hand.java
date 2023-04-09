@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Hand {
-	
-	protected List<Card> cardsInHand=new ArrayList<>();
-	
+
+	protected List<Card> cardsInHand = new ArrayList<>();
+
 	public Hand() {
 		List<Card> cardsInHand;
 	}
@@ -36,7 +36,7 @@ public abstract class Hand {
 		StringBuilder builder = new StringBuilder();
 		builder.append("hand: ").append(cardsInHand).append("");
 		return builder.toString();
-	
+
 	}
 
 }

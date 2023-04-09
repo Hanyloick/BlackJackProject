@@ -182,20 +182,19 @@ public class BlackJackApp {
 		if ((dealer.getBjHand() instanceof BlackJackHand) && ((player.getBjHand() instanceof BlackJackHand))) {
 			if (((BlackJackHand) (dealer.getBjHand())).isBlackJack()
 					&& (((BlackJackHand) (player.getBjHand())).isBlackJack())) {
-//			dealerShowsAllCards();
+
 				System.out.println("It's a draw! You and the dealer both have BlackJack.");
 				playAgain(scanner);
 			}
 		} else if ((((BlackJackHand) (player.getBjHand())).isBlackJack())) {
-//			dealerShowsAllCards();
+
 			System.out.println("You win with BlackJack!");
 			playAgain(scanner);
 		} else if (((BlackJackHand) (dealer.getBjHand())).isBlackJack()) {
-//			dealerShowsAllCards();
+
 			System.out.println("The dealer wins with BlackJack.");
 			playAgain(scanner);
-//			
-//		}}				
+		
 
 		}
 	}

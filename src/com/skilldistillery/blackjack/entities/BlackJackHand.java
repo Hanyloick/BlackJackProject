@@ -6,7 +6,7 @@ public class BlackJackHand extends Hand {
 		super();
 	}
 
-	boolean isBlackJack() {
+	public boolean isBlackJack() {
 		if (getHandValue() == 21) {
 			return true;
 		}
@@ -14,7 +14,7 @@ public class BlackJackHand extends Hand {
 
 	}
 
-	boolean isBust() {
+	public boolean isBust() {
 		if (getHandValue() > 21) {
 			return true;
 		}

@@ -30,14 +30,32 @@ public class Dealer extends Player {
 		}
 		System.out.println("]");
 	}
+	
+	public Deck newDeck() {
+		cardDeck = new Deck();
+		shuffle();
+		return cardDeck;
+	}
+	
+	public int countDeck() {
+		return this.cardDeck.checkDeckSize();
+	}
+	
+	public boolean needsHit() {
+		if (blackJackHand.getHandValue() < 17) {
+			return true;
+		}
+		return false;
+
+	}
+	
+	
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Dealer [");
-		if (cardDeck != null) {
-			builder.append("cardDeck=");
-			builder.append(cardDeck);
+		if (blackJackHand != null) {
+			builder.append(blackJackHand);
 		}
 		builder.append("]");
 		return builder.toString();

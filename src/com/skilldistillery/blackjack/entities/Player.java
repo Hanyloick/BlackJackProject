@@ -7,7 +7,7 @@ public class Player {
 		blackJackHand = new BlackJackHand();
 	}
 
-	public Hand getBjHand() {
+	public Hand getBlackJackHand() {
 		return blackJackHand;
 	}
 
@@ -16,12 +16,13 @@ public class Player {
 	}
 	
 	public void newHand() {
-		blackJackHand = new BlackJackHand();
+		this.blackJackHand = new BlackJackHand();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
+		builder.append("Player's");
 		if (blackJackHand != null) {
 			builder.append(blackJackHand);
 		}

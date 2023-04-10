@@ -16,59 +16,164 @@ public class BlackJackApp {
 		blackJackApp.run(scanner, blackJackApp);
 	}
 
-	public void run(Scanner sc, BlackJackApp blackJackApp) {
-
-		boolean on = true;
-		while (on) {
+	public void run(Scanner scanner, BlackJackApp blackJackApp) {
+		boolean running = true;
+		while (running) {
 			blackJackApp.displayMenu();
-			on = blackJackApp.userChoice(sc);
+			running = blackJackApp.userChoice(scanner);
 		}
+	}
 
-		// ask the player hit or stand?
+	private boolean userChoice(Scanner scanner) {
 
-		// player adds up cards in hand to determine hit or stand
-		// if user adds cards and are over 21 they bust otherwise
-
-		// if player hits give another card
-		// player adds up cards in hand to determine hit or stand
-		// ask the player hit or stand?
-
-		// if player stands no more cards.
-
-		// Dealer must hit below 17 and stand above 17
-
-		// if player is over 21 they bust and game over
+		if (getValidInput(scanner) == 1) {
+			playGame(scanner);
+		}
+		return false;
 	}
 
 	public void displayMenu() {
 		System.out.println("|-----------------------------------|");
 		System.out.println("|-Would you like to play BlackJack?-|");
-		System.out.println("|1.-----------YES-------------------|");
-		System.out.println("|2.-----------=NO-------------------|");
+		System.out.println("|1.----------YES(1)-----------------|");
+		System.out.println("|2.-----------NO(2)-----------------|");
 		System.out.println("|-----------------------------------|");
 	}
 
-	public boolean userChoice(Scanner scanner) {
-		int input = 0;
-		do {
-			input = getIntput(scanner);
-			scanner.nextLine();
-			if (input < 1 || input > 2) {
-				System.out.println("Out of Range, Try Again.");
+	public void playGame(Scanner scanner) {
+		boolean playing = true;
+		while (playing) {
+			playing = startGame(scanner);
+		}
+
+	}
+
+	public boolean startGame(Scanner scanner) {
+
+		setupGame();
+
+		BlackJackHand dealerBlackJackHand = (((BlackJackHand) (dealer.getBlackJackHand())));
+		BlackJackHand playerBlackJackHand = (((BlackJackHand) (player.getBlackJackHand())));
+
+		boolean playerTurn = true;
+		while (playerTurn ) {
+			playerTurn = runPlayerTurn(playerBlackJackHand, scanner);
+		}
+
+		if (!playerBlackJackHand.isBust()) {
+			if (dealerBlackJackHand.isBlackJack()) {
+				System.out.println("Dealer BlackJack!");
+				System.out.println("Dealer's " + dealer);
+				return determinePlayAgain(scanner);
 			}
-		} while (input < 1 || input > 2);
-		switch (input) {
-		case 1:
-			startGame(scanner);
-			scanner.nextLine();
-			break;
-		case 2:
+			while (!playerTurn && !dealerBlackJackHand.isBlackJack()) {
+				playerTurn = runDealerTurn(dealerBlackJackHand);
+			}
+		}
+
+		determineWinner(playerBlackJackHand, dealerBlackJackHand);
+		displayMenu();
+		return determinePlayAgain(scanner);
+	}
+
+	private void determineWinner(BlackJackHand playerBlackJackHand, BlackJackHand dealerBlackJackHand) {
+
+		if (playerBlackJackHand.getHandValue() == dealerBlackJackHand.getHandValue()) {
+			System.out.println("Draw!");
+			System.out.println("Dealer's " + dealer);
+			System.out.println("Player's " + player);
+		} else if (((playerBlackJackHand.getHandValue() > dealerBlackJackHand.getHandValue())
+				&& !playerBlackJackHand.isBust()) || dealerBlackJackHand.isBust()) {
+			System.out.println("You Win!");
+
+		} else {
+			System.out.println("Dealer Wins!");
+
+		}
+	}
+
+	public boolean determinePlayAgain(Scanner scanner) {
+		return getValidInput(scanner) == 1;
+	}
+
+	private boolean runDealerTurn(BlackJackHand dealerBlackJackHand) {
+		System.out.println("Dealer's " + dealer);
+		if (dealerBlackJackHand.isBlackJack()) {
+			System.out.println("BlackJack");
+			return true;
+		} else if (dealerBlackJackHand.isBust()) {
+			System.out.println("Dealer Bust!");
+			return true;
+		} else if (dealer.needsHit()) {
+			dealer.addCardToHand(dealer.dealCard());
 			return false;
 		}
 		return true;
 	}
 
-	public int getIntput(Scanner scanner) {
+	private boolean runPlayerTurn(BlackJackHand playerBlackJackHand, Scanner scanner) {
+		System.out.println("Player's " + player);
+		if (playerBlackJackHand.isBlackJack()) {
+			System.out.println("Player BlackJack");
+			return false;
+		} else if (playerBlackJackHand.isBust()) {
+			System.out.println("Bust!");
+			return false;
+		}
+
+		hitMenu();
+
+		if (getValidInput(scanner) == 1) {
+			player.addCardToHand(dealer.dealCard());
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	public void hitMenu() {
+		System.out.println("|-----------------------------------|");
+		System.out.println("|----Do you want to Hit or Stand?---|");
+		System.out.println("|1.----------Hit(1)-----------------|");
+		System.out.println("|2.---------Stand(2)----------------|");
+		System.out.println("|-----------------------------------|");
+	}
+
+
+	private void setupGame() {
+
+		if (dealer.countDeck() <= 8) {
+			dealer.newDeck();
+		}
+		player.newHand();
+		dealer.newHand();
+
+		player.addCardToHand(dealer.dealCard());
+		System.out.println("players " + player);
+		System.out.println(" ");
+		dealer.addCardToHand(dealer.dealCard());
+		dealer.dealDisplay();
+		System.out.println(" ");
+		player.addCardToHand(dealer.dealCard());
+		System.out.println("players " + player);
+		System.out.println(" ");
+		dealer.addCardToHand(dealer.dealCard());
+		dealer.dealDisplay();
+	}
+
+	private int getValidInput(Scanner scanner) {
+		int input = 0;
+		do {
+			input = getIntput(scanner);
+			if (input < 1 || input > 2) {
+				System.out.println("Out of Range, Try Again.");
+			}
+		} while (input < 1 || input > 2);
+		return input;
+	}
+
+	private int getIntput(Scanner scanner) {
 		int input = 0;
 		try {
 			input = scanner.nextInt();
@@ -78,126 +183,4 @@ public class BlackJackApp {
 		return input;
 	}
 
-	public void startGame(Scanner scanner) {
-		player.addCardToHand(dealer.dealCard());
-		System.out.println("players " + player);
-
-		dealer.addCardToHand(dealer.dealCard());
-		dealer.dealDisplay();
-
-		player.addCardToHand(dealer.dealCard());
-		System.out.println("players " + player);
-
-		dealer.addCardToHand(dealer.dealCard());
-		dealer.dealDisplay();
-
-		checkForBlackJackOrBust(player, scanner);
-		hitOrStand(scanner);
-		checkForBlackJack(scanner);
-	}
-
-	// win conditions
-	public void checkForBlackJackOrBust(Player player, Scanner scanner) {
-		if ((player.getBjHand() instanceof BlackJackHand)) {
-			if (((BlackJackHand) (player.getBjHand())).isBlackJack()) {
-				System.out.println(player);
-				System.out.println("Player wins with BlackJack!");
-				playAgain(scanner);
-			} else if (((BlackJackHand) (player.getBjHand())).isBust()) {
-				System.out.println(player);
-				System.out.println("Bust!");
-				playAgain(scanner);
-			}
-		}
-	}
-
-	public void hitMenu() {
-		System.out.println("|-----------------------------------|");
-		System.out.println("|----Do you want to Hit or Stand?---|");
-		System.out.println("|1.-----------Hit-------------------|");
-		System.out.println("|2.----------Stand------------------|");
-		System.out.println("|-----------------------------------|");
-	}
-
-	public void hitOrStand(Scanner scanner) {
-		hitMenu();
-
-		int input = 0;
-		if ((player.getBjHand() instanceof BlackJackHand)) {
-			if (((BlackJackHand) (player.getBjHand())).getHandValue() < 21) {
-				do {
-					input = getIntput(scanner);
-					scanner.nextLine();
-					if (input < 1 || input > 2) {
-						System.out.println("Out of Range, Try Again.");
-					}
-				} while (input < 1 || input > 2);
-				switch (input) {
-				case 1:
-					player.addCardToHand(dealer.dealCard());
-					checkForBlackJackOrBust(player, scanner);
-					break;
-				case 2:
-					dealerTurn();
-					break;
-
-				}
-			}
-		}
-	}
-
-	public void dealerTurn() {
-		while (dealer.needsHit()) {
-			dealer.addCardToHand(dealer.dealCard());
-			System.out.println("dealer " + dealer);
-		}
-	}
-
-	public void playAgain(Scanner scanner) {
-		System.out.println("Play again 1-2");
-		int input = 0;
-		do {
-			input = getIntput(scanner);
-			if (input < 1 || input > 2) {
-				System.out.println("Out of Range, Try Again.");
-			}
-		} while (input < 1 || input > 2);
-		switch (input) {
-		case 1:
-			if (dealer.countDeck() > 8) {
-				dealer.newHand();
-				player.newHand();
-				startGame(scanner);
-			} else {
-				dealer.newDeck();
-				dealer.newHand();
-				player.newHand();
-			}
-			scanner.nextLine();
-			break;
-		case 2:
-			System.out.println("Thanks for playing! ");
-
-		}
-	}
-
-	private void checkForBlackJack(Scanner scanner) {
-		if ((dealer.getBjHand() instanceof BlackJackHand) && ((player.getBjHand() instanceof BlackJackHand))) {
-			if (((BlackJackHand) (dealer.getBjHand())).isBlackJack()
-					&& (((BlackJackHand) (player.getBjHand())).isBlackJack())) {
-
-				System.out.println("It's a draw!");
-				playAgain(scanner);
-			}
-		} else if ((((BlackJackHand) (player.getBjHand())).isBlackJack())) {
-
-			System.out.println("You win BlackJack!");
-			playAgain(scanner);
-		} else if (((BlackJackHand) (dealer.getBjHand())).isBlackJack()) {
-
-			System.out.println("The dealer wins BlackJack.");
-			playAgain(scanner);
-
-		}
-	}
 }
